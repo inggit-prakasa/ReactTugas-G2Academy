@@ -7,26 +7,10 @@ class App extends Component {
      super(props);
      this.state = {
          click: true,
-         page: "HOME",
+         page: "LOGIN",
          userSelected: {},
-         users: [{
-             username:"inggit",
-             password:"123123123",
-             email:"inggit.prakasa123@gmail.com",
-             address:"Bogor",
-             phone:"0823220837293",
-             birth:"1998-10-21",
-             role:"HRD"
-         },
-             {
-                 username:"admin",
-                 password:"admin",
-                 email:"admin@admin.com",
-                 address:"Bogor",
-                 phone:"0823220837293",
-                 birth:"1990-10-21",
-                 role:"KARYAWAN"
-             }],
+         album: null,
+         users: null,
          result : null
      }
  }
@@ -61,20 +45,19 @@ class App extends Component {
 
     updateUser = user => {
         let newData = this.state.users
-        console.log(user.username)
         newData.push(user)
         this.setState({
             users: newData
         })
     }
 
-    editUser = (idx,user) => {
+    editUser = (user) => {
         const newData = this.state.users
-        console.log(idx)
-        newData[idx] = user
+        newData[user.id - 1] = user
         this.setState({
             users: newData
         })
+        console.log(this.state.users)
     }
 
     showPage = () => {
@@ -84,7 +67,7 @@ class App extends Component {
         return <LoginPage users={this.state.users}  goToHome={() => this.goToPage("HOME")} selectedUser={this.selectedUser}/>
     }
 
-    goToPage = page => {
+    goToPage = (page) => {
         this.setState({
             page
         })

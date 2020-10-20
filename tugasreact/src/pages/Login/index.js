@@ -5,6 +5,7 @@ import "./style.css"
 class Login extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             username: "",
             password: "",
@@ -12,8 +13,8 @@ class Login extends Component {
             variant: "",
             messageAlert: ""
         }
+
         this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.goLogin = this.goLogin.bind(this);
     }
 
@@ -21,10 +22,6 @@ class Login extends Component {
         this.setState({
             [event.target.name]: event.target.value,
         });
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
     }
 
     setShow(show, variant,messageAlert) {
@@ -38,19 +35,29 @@ class Login extends Component {
     goLogin(event) {
         event.preventDefault();
         const { username, password } = this.state
-        let user = this.props.users.find(user => user.username === username && 'admin' === password)
-        console.log("user login :",user)
-        if (user !== undefined) {
-            this.props.goToHome()
+        let user = this.props.users.find(user => user.username === username)
+        if (user === undefined) {
+            this.setShow(true,'danger','Wrong Username')
+            return
+        }
+        if (user.password === undefined) {
+            if (password !== "admin") {
+                this.setShow(true,'danger','Wrong Password')
+                return
+            }
         } else {
-            this.setShow(true,'danger','Wrong Username or Password ')
+            if (user.password !== password ){
+                this.setShow(true,'danger','Wrong Password')
+                return
+            }
         }
         this.props.selectedUser(user)
+        this.props.goToHome()
     }
 
     render() {
         return (
-            <div className="App" style={{backgroundColor: 'dark'}}>
+            <div className="App" style={{backgroundColor: '#1C8EF9'}}>
                 <div className="auth-wrapper">
                     <div className="auth-inner">
                         <Form onSubmit={this.goLogin}>
@@ -64,9 +71,9 @@ class Login extends Component {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" name="password" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
+                                <Form.Control type="password" name="password" value={this.state.password || ''} onChange={this.handleChange} placeholder="Password" />
                             </Form.Group>
-                            <Button onClick={() => this.setState({ show: true })}>Alert</Button>
+                            <Button type="submit">Submit</Button>
                         </Form>
                     </div>
                 </div>
